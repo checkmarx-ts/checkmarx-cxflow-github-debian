@@ -1,5 +1,5 @@
 #Use CxFlow Base image
-FROM checkmarx/cx-flow:debian
+FROM checkmarx/cx-flow-debian
 #Copy script to import certs into Java cacerts keystore
 COPY scripts/keytool-import-certs.sh /app/keytool-import-certs.sh
 #Make it executable
