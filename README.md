@@ -4,15 +4,15 @@
 [![Latest Release](https://img.shields.io/github/v/release/checkmarx-ts/checkmarx-cxflow-github-action)](https://github.com/checkmarx-ts/checkmarx-github-action/releases)
 [![Open Issues](https://img.shields.io/github/issues-raw/checkmarx-ts/checkmarx-cxflow-github-action)](https://github.com/checkmarx-ts/checkmarx-github-action/issues)
 
-Checkmarx CxFlow GitHub Action with SARIF output.  
+Checkmarx CxFlow GitHub Action with SARIF output.
 
-Publish Security Alerts associated with the code in your Github Repository using Checkmarx with this Github Action Integration. 
+Publish Security Alerts associated with the code in your Github Repository using Checkmarx with this Github Action Integration.
 
 This is a Wrapper to trigger scans the latest version of CxFlow through Docker to launch Checkmarx SAST or SCA Scans.
 
 ![Checkmarx](images/checkmarx-big.png)
 
-* Checkmarx SAST (**CxSAST**) is an enterprise-grade flexible and accurate static analysis solution used to identify hundreds of security vulnerabilities in custom code. It is used by development, DevOps, and security teams to scan source code early in the SDLC, identify vulnerabilities and provide actionable insights to remediate them. 
+* Checkmarx SAST (**CxSAST**) is an enterprise-grade flexible and accurate static analysis solution used to identify hundreds of security vulnerabilities in custom code. It is used by development, DevOps, and security teams to scan source code early in the SDLC, identify vulnerabilities and provide actionable insights to remediate them.
 * Checkmarx SCA (**CxSCA**) is an effective next-gen software composition analysis solution designed to help development teams ship secure software quickly while giving AppSec teams the insight and control they need to improve your software security risk posture.
 * Checkmarx Flow (**CxFlow**) is an SDLC orchestration module managing Applciaton Security Test (AST) scan initiation and results manangement.
 
@@ -22,46 +22,52 @@ Please find more info in the official website: <a href="www.checkmarx.com">Check
 
 The GitHub action  [![Latest Release](https://img.shields.io/github/v/release/checkmarx-ts/checkmarx-cxflow-github-action)](https://github.com/checkmarx-ts/checkmarx-github-action/releases)  is only compatible with Checkmarx SAST 9.x and Checkmarx CxSCA.
 
+*Note:* Please use [cx-flow-debian](https://github.com/checkmarx-ts/checkmarx-cxflow-github-debian) GitHub action for using cx-flow with the Debian operating system. This GitHub action supports Alpine OS. Every parameter is the same in both.
 ## Inputs
 
-| Variable                | Example Value &nbsp;                           | Description &nbsp;                                                                                                                                                                                                                                                 | Type          | Required | Default                        |
-|-------------------------|------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|----------|--------------------------------|
-| checkmarx_url           | https://checkmarx.company.com                  | Checkmarx Server URL                                                                                                                                                                                                                                               | String        | Yes      | N/A                            |
-| checkmarx_username      | ${{ secrets.CHECKMARX_USERNAME }}              | Checkmarx Username                                                                                                                                                                                                                                                 | String        | Yes      | N/A                            |
-| checkmarx_password      | ${{ secrets.CHECKMARX_PASSWORD }}              | Checkmarx Password                                                                                                                                                                                                                                                 | Secure String | Yes      | N/A                            |
-| checkmarx_client_secret | ${{ secrets.CHECKMARX_CLIENT_SECRET }}         | Checkmarx OIDC Client Secret  Reference [1](https://checkmarx.atlassian.net/wiki/spaces/KC/pages/1187774721/Using+the+CxSAST+REST+API+v8.6.0+and+up), [2](https://checkmarx.atlassian.net/wiki/spaces/KC/pages/1187774721/Using+the+CxSAST+REST+API+v8.6.0+and+up) | Secure String | Yes      |                                |
-| team                    | /CxServer/SP/Company                           | Checkmarx Team for Project                                                                                                                                                                                                                                         | String        | No       | /CxServer/SP/Company           |
-| project                 | ProjectName                                    | Checkmarx Project                                                                                                                                                                                                                                                  | String        | Yes      | N/A                            |
-| app                     | AppID-1234                                     | Unique Application Identifier used by downstream bug trackers (i.e. Jira)                                                                                                                                                                                          | String        | No       | SampleApp                      |
-| preset                  | Checkmarx Express                              | Checkmarx scan preset (SAST)                                                                                                                                                                                                                                       | String        | No       | High and Medium                |
-| break_build             | true                                           | Break build based on results?                                                                                                                                                                                                                                      | Boolean       | No       | false                          |
-| bug_tracker             | Sarif, GitHubPull, GitHub                      | Bug-tracker used for scan results                                                                                                                                                                                                                                  | String        | No       | Sarif                          |
-| incremental             | true                                           | Trigger scan as incremental? (SAST)                                                                                                                                                                                                                                | Boolean       | No       | true                           |
-| github_token            | ${{ secrets.GITHUB_TOKEN }}                    | GitHub API Token, used for PR Feedback or GitHub Issue Feedback                                                                                                                                                                                                    | String        | No       | ${{ github.token }}            |
-| repo-url                | ${{ github.event.repository.url }}             | GitHub Repository URL, used for Issue Feedback                                                                                                                                                                                                                     | String        | Yes      | NA                             |
-| scanners                | sast, cxgo, sca                                | Vulnerability Scanners (sast, sca, cxgo). Multiple comma seperated values allowed.                                                                                                                                                                                 | String        | Yes      | None                           |
-| extra_certificates      | certificates                                   | Workspace subdirectory containing additional CxFlow X509 certificates (.crt)                                                                                                                                                                                       | String        | No       | None                           |
-| sca_api_url             | https://api-sca.checkmarx.net                  | API URL for SCA scan                                                                                                                                                                                                                                               | String        | No       | https://api-sca.checkmarx.net  |
-| sca_app_url             | https://sca.checkmarx.net                      | APP URL for SCA scan                                                                                                                                                                                                                                               | String        | No       | https://sca.checkmarx.net      |
-| sca_access_control_url  | https://platform.checkmarx.net                 | Access control URL for SCA scan                                                                                                                                                                                                                                    | String        | No       | https://platform.checkmarx.net |
-| sca_tenant              | SCA-COMPANY_NAME                               | Tenant for the SCA project                                                                                                                                                                                                                                         | String        | No       | N/A                            |
-| sca_username            | ${{ secrets.SCA_USERNAME }}                    | Username for SCA scan                                                                                                                                                                                                                                              | String        | No       | N/A                            |
-| sca_password            | ${{ secrets.SCA_PASSWORD }}                    | Password for SCA scan                                                                                                                                                                                                                                              | Secure String | No       | N/A                            |
-| cxgo_base_url           | https://api.checkmarx.net                      | Base URL for CxGo Scan                                                                                                                                                                                                                                             | String        | No       | https://api.checkmarx.net      |
-| cxgo_portal_url         | https://cloud.checkmarx.net                    | Portal URL for CxGo Scan                                                                                                                                                                                                                                           | String        | No       | https://cloud.checkmarx.net    |
-| cxgo_client_secret      | ${{ secrets.CXGO_CLIENT_SECRET }}              | CxGo Client secret                                                                                                                                                                                                                                                 | Secure String | No       | N/A                            |
-| jira_url                | ${{ secrets.JIRA_URL }}                        | Jira Url                                                                                                                                                                                                                                                           | Secure String | No       | N/A                            | 
-| jira_username           | ${{ secrets.JIRA_USERNAME }}                   | Jira Username                                                                                                                                                                                                                                                      | Secure String | No       | N/A                            |
-| jira_token              | ${{ secrets.JIRA_TOKEN }}                      | Jira Secret. This is personal access token, not password.                                                                                                                                                                                                          | Secure String | No       | N/A                            |
-| jira_project            | ${{ secrets.JIRA_PROJECT }}                    | Jira Project Name                                                                                                                                                                                                                                                  | Secure String | No       | N/A                            |
-| jira_issue_type         | 'Application Security Bug'                     | Jira Issue Type                                                                                                                                                                                                                                                    | String        | No       | N/A                            |
-| jira_open_transition    | 'In Progress'                                  | Jira Open Transition Status                                                                                                                                                                                                                                        | String        | No       | N/A                            |
-| jira_close_transition   | 'Done'                                         | Jira Close Transition Status                                                                                                                                                                                                                                       | String        | No       | N/A                            |
-| jira_open_status        | 'Backlog,Selected for Development,In Progress' | Jira Open Status                                                                                                                                                                                                                                                   | String        | No       | N/A                            |
-| jira_closed_status      | 'Done'                                         | Jira Closed Status                                                                                                                                                                                                                                                 | String        | No       | N/A                            |
-| params                  | --severity=High --branch=${{ github.ref }}     | Any additional parameters for CxFlow.  For a full list of all the parameters, see the [following](https://github.com/checkmarx-ltd/cx-flow/wiki/Configuration).  Special note about [filtering](#Filters)                                                          | String        | No       | N/A                            |
-| java_opts               | -Xms512m                                       | Any Java options                                                                                                                                                                                                                                                   | String        | No       | N/A                            |
+| Variable                   | Example Value &nbsp;                           | Description &nbsp;                                                                                                                                                                                                                                                 | Type          | Required | Default                        |
+|----------------------------|------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|----------|--------------------------------|
+| checkmarx_url              | https://checkmarx.company.com                  | Checkmarx Server URL                                                                                                                                                                                                                                               | String        | Yes      | N/A                            |
+| checkmarx_username         | ${{ secrets.CHECKMARX_USERNAME }}              | Checkmarx Username                                                                                                                                                                                                                                                 | String        | Yes      | N/A                            |
+| checkmarx_password         | ${{ secrets.CHECKMARX_PASSWORD }}              | Checkmarx Password                                                                                                                                                                                                                                                 | Secure String | Yes      | N/A                            |
+| checkmarx_client_secret    | ${{ secrets.CHECKMARX_CLIENT_SECRET }}         | Checkmarx OIDC Client Secret  Reference [1](https://checkmarx.atlassian.net/wiki/spaces/KC/pages/1187774721/Using+the+CxSAST+REST+API+v8.6.0+and+up), [2](https://checkmarx.atlassian.net/wiki/spaces/KC/pages/1187774721/Using+the+CxSAST+REST+API+v8.6.0+and+up) | Secure String | Yes      |                                |
+| team                       | /CxServer/SP/Company                           | Checkmarx Team for Project                                                                                                                                                                                                                                         | String        | No       | /CxServer/SP/Company           |
+| project                    | ProjectName                                    | Checkmarx Project                                                                                                                                                                                                                                                  | String        | Yes      | N/A                            |
+| app                        | AppID-1234                                     | Unique Application Identifier used by downstream bug trackers (i.e. Jira)                                                                                                                                                                                          | String        | No       | SampleApp                      |
+| preset                     | Checkmarx Express                              | Checkmarx scan preset (SAST)                                                                                                                                                                                                                                       | String        | No       | High and Medium                |
+| break_build                | true                                           | Break build based on results?                                                                                                                                                                                                                                      | Boolean       | No       | false                          |
+| bug_tracker                | Sarif, GitHubPull, GitHub                      | Bug-tracker used for scan results                                                                                                                                                                                                                                  | String        | No       | Sarif                          |
+| incremental                | true                                           | Trigger scan as incremental? (SAST)                                                                                                                                                                                                                                | Boolean       | No       | true                           |
+| github_token               | ${{ secrets.GITHUB_TOKEN }}                    | GitHub API Token, used for PR Feedback or GitHub Issue Feedback                                                                                                                                                                                                    | String        | No       | ${{ github.token }}            |
+| repo-url                   | ${{ github.event.repository.url }}             | GitHub Repository URL, used for Issue Feedback                                                                                                                                                                                                                     | String        | Yes      | NA                             |
+| scanners                   | sast, cxgo, sca                                | Vulnerability Scanners (sast, sca, cxgo). Multiple comma seperated values allowed.                                                                                                                                                                                 | String        | Yes      | None                           |
+| extra_certificates         | certificates                                   | Workspace subdirectory containing additional CxFlow X509 certificates (.crt)                                                                                                                                                                                       | String        | No       | None                           |
+| sca_api_url                | https://api-sca.checkmarx.net                  | API URL for SCA scan                                                                                                                                                                                                                                               | String        | No       | https://api-sca.checkmarx.net  |
+| sca_app_url                | https://sca.checkmarx.net                      | APP URL for SCA scan                                                                                                                                                                                                                                               | String        | No       | https://sca.checkmarx.net      |
+| sca_access_control_url     | https://platform.checkmarx.net                 | Access control URL for SCA scan                                                                                                                                                                                                                                    | String        | No       | https://platform.checkmarx.net |
+| sca_tenant                 | SCA-COMPANY_NAME                               | Tenant for the SCA project                                                                                                                                                                                                                                         | String        | No       | N/A                            |
+| sca_username               | ${{ secrets.SCA_USERNAME }}                    | Username for SCA scan                                                                                                                                                                                                                                              | String        | No       | N/A                            |
+| sca_password               | ${{ secrets.SCA_PASSWORD }}                    | Password for SCA scan                                                                                                                                                                                                                                              | Secure String | No       | N/A                            |
+| cxgo_base_url              | https://api.checkmarx.net                      | Base URL for CxGo Scan                                                                                                                                                                                                                                             | String        | No       | https://api.checkmarx.net      |
+| cxgo_portal_url            | https://cloud.checkmarx.net                    | Portal URL for CxGo Scan                                                                                                                                                                                                                                           | String        | No       | https://cloud.checkmarx.net    |
+| cxgo_client_secret         | ${{ secrets.CXGO_CLIENT_SECRET }}              | CxGo Client secret                                                                                                                                                                                                                                                 | Secure String | No       | N/A                            |
+| jira_url                   | ${{ secrets.JIRA_URL }}                        | Jira Url                                                                                                                                                                                                                                                           | Secure String | No       | N/A                            | 
+| jira_username              | ${{ secrets.JIRA_USERNAME }}                   | Jira Username                                                                                                                                                                                                                                                      | Secure String | No       | N/A                            |
+| jira_token                 | ${{ secrets.JIRA_TOKEN }}                      | Jira Secret. This is personal access token, not password.                                                                                                                                                                                                          | Secure String | No       | N/A                            |
+| jira_project               | ${{ secrets.JIRA_PROJECT }}                    | Jira Project Name                                                                                                                                                                                                                                                  | Secure String | No       | N/A                            |
+| jira_issue_type            | 'Application Security Bug'                     | Jira Issue Type                                                                                                                                                                                                                                                    | String        | No       | N/A                            |
+| jira_open_transition       | 'In Progress'                                  | Jira Open Transition Status                                                                                                                                                                                                                                        | String        | No       | N/A                            |
+| jira_close_transition      | 'Done'                                         | Jira Close Transition Status                                                                                                                                                                                                                                       | String        | No       | N/A                            |
+| jira_open_status           | 'Backlog,Selected for Development,In Progress' | Jira Open Status                                                                                                                                                                                                                                                   | String        | No       | N/A                            |
+| jira_closed_status         | 'Done'                                         | Jira Closed Status                                                                                                                                                                                                                                                 | String        | No       | N/A                            |
+| project_custom_field_key   | 'test'                                         | project custom field key that is mentioned in Checkmarx SAST                                                                                                                                                                                                       | String        | No       | N/A                            |
+| project_custom_field_value | 'test1'                                        | project custom field value that needs to be updated or added in checkmarx SAST                                                                                                                                                                                     | String        | No       | N/A                            |
+| scan_custom_field_key      | 'test'                                         | scan custom field key that is mentioned in Checkmarx SAST Scan.                                                                                                                                                                                                    | String        | No       | N/A                            |
+| scan_custom_field_value    | 'test1'                                        | scan custom field value that needs to be added in Checkmarx SAST Scan.                                                                                                                                                                                             | String        | No       | N/A                            |
+| params                     | --severity=High --branch=${{ github.ref }}     | Any additional parameters for CxFlow.  For a full list of all the parameters, see the [following](https://github.com/checkmarx-ltd/cx-flow/wiki/Configuration).  Special note about [filtering](#Filters)                                                          | String        | No       | N/A                            |
+| java_opts                  | -Xms512m                                       | Any Java options                                                                                                                                                                                                                                                   | String        | No       | N/A                            |
 
+*Note:* Please use `--checkmarx.settings-override=true` in params while using `project-custom-field` or `scan-custom-field`. Make sure project_custom_field_key and project_custom_field_value both are mentioned.
 ## Secrets
 
 _Note: It is recommended to leverage secrets for any sensitive inputs_
@@ -118,8 +124,8 @@ Any remaining cx-flow parameters can be provided to params in the same way that 
 For a full list of all the cx-flow parameters, see the [following](https://github.com/checkmarx-ltd/cx-flow/wiki/Configuration)
 ````yaml
 # sample examples
-    --sca.team ="/CxServer/Sca
-    --jira.url ="https://xxxx.atlassian.net"
+--sca.team ="/CxServer/Sca
+--jira.url ="https://xxxx.atlassian.net"
 ````
 *Note:* Please use environment variables if any params values contain spaces.
 #### Example for environment variable
@@ -138,43 +144,43 @@ jobs:
 
     # Steps require - checkout code, run CxFlow Action, Upload SARIF report (optional)
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-    # Runs the Checkmarx Scan leveraging the latest version of CxFlow - REFER to Action README for list of inputs
-    - name: Checkmarx CxFlow Action
-      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.9
-      #environment variable used for cx-flow
-      env:
-        JIRA_FIELDS_0_JIRA_DEFAULT_VALUE : APPSEC-2371
-        JIRA_FIELDS_0_JIRA_FIELD_NAME : "Epic Link"
-        JIRA_FIELDS_0_JIRA_FIELD_TYPE : text
-        JIRA_FIELDS_0_TYPE : static
-      with:
-        project: ${{ github.repository }}-PR
-        team: ${{ secrets.CHECKMARX_TEAMS }}
-        checkmarx_url: ${{ secrets.CHECKMARX_URL }}
-        checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
-        checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
-        checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }}
-        scanners: sca
-        break_build: true
-        bug_tracker: jira
-        sca_api_url: ${{ secrets.SCA_API_URL }}
-        sca_app_url: ${{ secrets.SCA_APP_URL }}
-        sca_access_control_url: ${{ secrets.SCA_ACCESS_CONTROL_URL }}
-        sca_tenant: ${{  secrets.SCA_TENANT }}
-        sca_username: ${{ secrets.SCA_USERNAME }}
-        sca_password: ${{ secrets.SCA_PASSWORD }}
-        jira_url : ${{ secrets.JIRA_URL }}
-        jira_username : ${{ secrets.JIRA_USERNAME }}
-        jira_token : ${{ secrets.JIRA_TOKEN }}
-        jira_project : ${{ secrets.JIRA_PROJECT }}
-        jira_issue_type : 'Bug'
-        jira_open_transition : 'In Progress'
-        jira_close_transition : 'Done'
-        jira_open_status : 'Selected for Development,In Progress'
-        jira_closed_status : 'Done'
-        params: '--namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --merge-id=${{ github.event.number }} --logging.level.com.checkmarx.*=DEBUG --cx-flow.filterSeverity --cx-flow.filterCategory'
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      # Runs the Checkmarx Scan leveraging the latest version of CxFlow - REFER to Action README for list of inputs
+      - name: Checkmarx CxFlow Action
+        uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.9
+        #environment variable used for cx-flow
+        env:
+          JIRA_FIELDS_0_JIRA_DEFAULT_VALUE : APPSEC-2371
+          JIRA_FIELDS_0_JIRA_FIELD_NAME : "Epic Link"
+          JIRA_FIELDS_0_JIRA_FIELD_TYPE : text
+          JIRA_FIELDS_0_TYPE : static
+        with:
+          project: ${{ github.repository }}-PR
+          team: ${{ secrets.CHECKMARX_TEAMS }}
+          checkmarx_url: ${{ secrets.CHECKMARX_URL }}
+          checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
+          checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
+          checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }}
+          scanners: sca
+          break_build: true
+          bug_tracker: jira
+          sca_api_url: ${{ secrets.SCA_API_URL }}
+          sca_app_url: ${{ secrets.SCA_APP_URL }}
+          sca_access_control_url: ${{ secrets.SCA_ACCESS_CONTROL_URL }}
+          sca_tenant: ${{  secrets.SCA_TENANT }}
+          sca_username: ${{ secrets.SCA_USERNAME }}
+          sca_password: ${{ secrets.SCA_PASSWORD }}
+          jira_url : ${{ secrets.JIRA_URL }}
+          jira_username : ${{ secrets.JIRA_USERNAME }}
+          jira_token : ${{ secrets.JIRA_TOKEN }}
+          jira_project : ${{ secrets.JIRA_PROJECT }}
+          jira_issue_type : 'Bug'
+          jira_open_transition : 'In Progress'
+          jira_close_transition : 'Done'
+          jira_open_status : 'Selected for Development,In Progress'
+          jira_closed_status : 'Done'
+          params: '--namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --merge-id=${{ github.event.number }} --logging.level.com.checkmarx.*=DEBUG --cx-flow.filterSeverity --cx-flow.filterCategory'
 ``` 
 In given example as "Epic Link" contains space, hence it is used as environment variable and not passed in params.
 
@@ -187,7 +193,7 @@ To understand more about environment variable, Please see [following](https://gi
 
 The default output format for this GitHub Action is a [SARIF](https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/sarif-support-for-code-scanning) output report stored in the working directory as **./cx.sarif**
 
-For full documentation on all the supported output formats and defect management integration, please see the [following](https://github.com/checkmarx-ltd/cx-flow/wiki/Bug-Trackers-and-Feedback-Channels).  
+For full documentation on all the supported output formats and defect management integration, please see the [following](https://github.com/checkmarx-ltd/cx-flow/wiki/Bug-Trackers-and-Feedback-Channels).
 
 ### `SARIF Report`
 
@@ -223,23 +229,23 @@ The file **_./cx.sarif_** is created containing issue details based on the filte
 
 ## Sample Workflow files
 
- * [Github PUSH workflow for SAST](sample-yml/checkmarx-sast-scan-push.yml)
- * [Github PUSH workflow for SCA](sample-yml/checkmarx-sca-scan-push.yml)
- * [Github PULL REQUEST workflow for SAST](sample-yml/github-pullrequest.yml)
- * [Github Cloud Local scan](sample-yml/cloud_runner_local_scan.yml)
- * [Github Cloud Remote scan](sample-yml/remote_sample.yml)
+* [Github PUSH workflow for SAST](sample-yml/checkmarx-sast-scan-push.yml)
+* [Github PUSH workflow for SCA](sample-yml/checkmarx-sca-scan-push.yml)
+* [Github PULL REQUEST workflow for SAST](sample-yml/github-pullrequest.yml)
+* [Github Cloud Local scan](sample-yml/cloud_runner_local_scan.yml)
+* [Github Cloud Remote scan](sample-yml/remote_sample.yml)
 
 ## Checkmarx SAST/SCA using self-hosted  environment
 
 ### How to setup GitHub self hosted runner?
 #### User can follow below steps to configure self-hosted runner-
-#### 1- Go to settings of your project 
+#### 1- Go to settings of your project
 ![Sample Alert](images/1.png)
-#### 2- Select Runners under Actions tab 
+#### 2- Select Runners under Actions tab
 ![Sample Alert](images/1.1.png)
-#### 3- Select new self-hosted runner 
-![Sample Alert](images/2.png) 
-#### 4- Please select OS same as your target machine and follow instruction 
+#### 3- Select new self-hosted runner
+![Sample Alert](images/2.png)
+#### 4- Please select OS same as your target machine and follow instruction
 ![Sample Alert](images/3.png)
 
 ### GitHub Action Self-hosted runner  configuration for  Local Scan
@@ -365,7 +371,7 @@ jobs:
 
 ## FAQ
 #### Why change in single file causing issue in SAST there is more than 7% files code change
-* This issue occurs due to not exclusion of .git and .github folders. Please refer below code 
+* This issue occurs due to not exclusion of .git and .github folders. Please refer below code
 ```
 env:
         CHECKMARX_CLIENT_ID : "resource_owner_sast_client"
