@@ -10,6 +10,7 @@
 [![Open Issues](https://img.shields.io/github/issues-raw/checkmarx-ts/checkmarx-cxflow-github-debian)](https://github.com/checkmarx-ts/checkmarx-cxflow-github-debian/issues)
 
 </div>
+
 ---
 <br />
 <p align="center">
@@ -17,7 +18,7 @@
     <img src="https://raw.githubusercontent.com/Checkmarx/ci-cd-integrations/main/.images/cx_logo.svg" alt="Logo" width="80" height="80" />
   </a>
 
-<h3 align="center">Checkmarx CxFlow Github Action</h3>
+<h3 align="center">Checkmarx CxFlow Github Debian</h3>
 
 <p align="center">
 <br />
